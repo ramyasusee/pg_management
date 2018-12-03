@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include pg_admin *.css
+recursive-include pg_admin *.csv
+recursive-include pg_admin *.html
+recursive-include pg_admin *.ico
+recursive-include pg_admin *.js
+recursive-include pg_admin *.json
+recursive-include pg_admin *.md
+recursive-include pg_admin *.png
+recursive-include pg_admin *.py
+recursive-include pg_admin *.svg
+recursive-include pg_admin *.txt
+recursive-exclude pg_admin *.pyc
