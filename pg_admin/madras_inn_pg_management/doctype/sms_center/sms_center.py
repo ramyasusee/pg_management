@@ -25,8 +25,28 @@ class SMSCenter(Document):
 			for member in group.person_list:
 				person = frappe.get_doc('Persons', member.person)
 				rec_list.append(person.mobile_no)
-
+		if self.send_to == "Active":
+			pending = frappe.get_all('Fee', filters={'status':'Active'}, fields=['mobile_number'])
+			for d in pending:
+				rec_list.append(d['mobile_number'])
+		if self.send_to == "Inactive":
+			pending = frappe.get_all('Fee', filters={'status':'Inactive'}, fields=['mobile_number'])
+			for d in pending:
+				rec_list.append(d['mobile_number'])
+		if self.send_to == "Pending":
+			pending = frappe.get_all('Fee', filters={'outstanding_amount':('>', 0)}, fields=['data_1', 'mobile_number'])
+			for d in pending:
+				rec_list.append(d['mobile_number'])
 		self.receiver_list = "\n".join(list(set(rec_list))) #To ensure only unique numbers come out.
+
+	def send_pending_message(self):
+		if self.send_to == "Pending":
+			pending = frappe.get_all('Fee', filters={'outstanding_amount':('>', 0)}, fields=['data_1', 'mobile_number', 'outstanding_amount'])
+			for d in pending:
+				message = "Hi {}! Your Pending bill is {}.".format(d['data_1'], d['outstanding_amount'])
+				number = d['mobile_number']
+				send_sms([number], message)
+		pass
 
 	def get_receiver_nos(self):
 		receiver_nos = []

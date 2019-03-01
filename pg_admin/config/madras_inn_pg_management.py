@@ -9,7 +9,11 @@ def get_data():
 					{
 						"type": "doctype",
 						"name": "Inmate"
-					}
+					},
+					{
+                        "type": "doctype",
+                        "name": "PG Datas"
+                    }
 				]
 			},
 			{
@@ -61,6 +65,18 @@ def get_data():
 					{
 						"type": "doctype",
 						"name": "Fee Plan"
+					},
+					{
+						"type": "doctype",
+						"name": "Plan Structure"
+					},
+					{
+						"type": "doctype",
+						"name": "Fee Component"
+					},
+					{
+						"type": "doctype",
+						"name": "Fee Category"
 					}
 				]
 			}

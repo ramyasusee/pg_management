@@ -91,21 +91,11 @@ app_license = "MIT"
 # ---------------
 
 # scheduler_events = {
-# 	"all": [
-# 		"pg_admin.tasks.all"
-# 	],
-# 	"daily": [
-# 		"pg_admin.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"pg_admin.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"pg_admin.tasks.weekly"
-# 	]
-# 	"monthly": [
-# 		"pg_admin.tasks.monthly"
-# 	]
+# 	"cron": {
+# 		"* * * * *": [
+# 			"pg_admin.madras_inn_pg_management.tasks.every_minute"
+# 		]
+# 	}
 # }
 
 # Testing
