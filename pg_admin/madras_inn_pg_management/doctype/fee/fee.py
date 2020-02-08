@@ -7,9 +7,4 @@ import frappe
 from frappe.model.document import Document
 
 class Fee(Document):
-	def validate(self):
-		# if(self.date_of_invoice == frappe.datetime.month_start()):
-		# 	self.temp = "true"
-		# else:
-		# 	self.temp = "false"
-		pass
+	pass

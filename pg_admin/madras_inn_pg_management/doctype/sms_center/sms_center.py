@@ -34,18 +34,19 @@ class SMSCenter(Document):
 			for d in pending:
 				rec_list.append(d['mobile_number'])
 		if self.send_to == "Pending":
-			pending = frappe.get_all('Fee', filters={'outstanding_amount':('>', 0)}, fields=['data_1', 'mobile_number'])
+			pending = frappe.get_all('Fee', filters={'outstanding_amount':('>', 0),'docstatus':1}, fields=['data_1', 'mobile_number'])
 			for d in pending:
 				rec_list.append(d['mobile_number'])
 		self.receiver_list = "\n".join(list(set(rec_list))) #To ensure only unique numbers come out.
 
 	def send_pending_message(self):
 		if self.send_to == "Pending":
-			pending = frappe.get_all('Fee', filters={'outstanding_amount':('>', 0)}, fields=['data_1', 'mobile_number', 'outstanding_amount'])
+			pending = frappe.get_all('Fee', filters={'outstanding_amount':('>', 0),'docstatus':1}, fields=['occupant_id', 'mobile_number', 'outstanding_amount'])
 			for d in pending:
-				message = "Hi {}! Your Pending bill is {}.".format(d['data_1'], d['outstanding_amount'])
+				message = "Hi {}! Your Pending bill is {}.".format(d['occupant_id'], d['outstanding_amount'])
 				number = d['mobile_number']
-				send_sms([number], message)
+				reply = send_sms([number], message)
+			msgprint(_("Hi {}! Your Pending bill is {}.".format(d['occupant_id'], d['outstanding_amount'])))
 		pass
 
 	def get_receiver_nos(self):
@@ -73,7 +74,7 @@ class SMSCenter(Document):
 			else:
 				receiver_list = self.get_receiver_nos()
 			if receiver_list:
-				log = send_sms(receiver_list, cstr(self.message.encode('utf-8')))
+				log = send_sms(receiver_list, self.message)
 				delist = '<br>'.join(receiver_list)
 				msgprint(_("Message: <br><b>"+self.message.replace('\n', '<br>')+"</b><br><br>Queued for sending to the following "+str(len(receiver_list))+" recipient(s):<br><br>"+delist+"<br><br> Click here to know delivery status &nbsp; <span><a class='btn btn-primary btn-sm' target='_blank' href='https://tasks.yesandyesrmc.com/desk#Form/SMS Log/"+log.name+"'>View "+log.name+"</a></span>"))
 				return log
@@ -101,7 +102,7 @@ def validate_receiver_nos(receiver_list):
 
 def get_sender_name():
 	"returns name as SMS sender"
-	sender_name = 'YESYES'
+	sender_name = 'MDRSIN'
 	if len(sender_name) > 6 and \
 			frappe.db.get_default("country") == "India":
 		throw("""As per TRAI rule, sender name must be exactly 6 characters.
@@ -118,7 +119,11 @@ def get_contact_number(contact_name, value, key):
 
 @frappe.whitelist()
 def send_sms(receiver_list, msg, sender_name = '', dialog = '', justlog=''):
-
+	try:
+		basestring
+	except NameError:
+		basestring = str
+	
 	import json
 	if isinstance(receiver_list, basestring):
 		receiver_list = json.loads(receiver_list)
@@ -162,9 +167,13 @@ def send_via_gateway(arg):
 def send_request(params, customID):
 	sms_enabled = frappe.db.get_single_value('SMS Center', 'sms_enable')
 	if sms_enabled:
-		nums = filter(lambda x: x in string.printable, params.get('phone'))
-		msg = filter(lambda x: x in string.printable, params.get('msg'))
-		os.system("sendsms "+nums+" \""+base64.b64encode(msg)+"\" "+customID+" > /tmp/sms_delivary_report.log 2>&1 &".encode('utf-8'))
+		nums = "".join(filter(lambda x: x in string.printable, params.get('phone')))
+		msg = "".join(filter(lambda x: x in string.printable, params.get('msg')))
+		msg = str(base64.b64encode(msg.encode('utf-8')).decode('utf-8'))
+		customID = str(customID.decode('utf-8'))
+		cmd = "/usr/local/bin/sendsms {nums} \"{msg}\" \"{customID}\" > /tmp/sms_delivary_report.log 2>&1 &".format(nums=nums, msg=msg, customID=customID)
+		#frappe.msgprint(_("Command: <code>{}</code>".format(cmd)))
+		os.system(cmd.encode('utf-8'))
 		return 200
 	else:
 		return 500

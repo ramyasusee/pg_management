@@ -4,7 +4,7 @@
 frappe.ui.form.on('Inmate', {
 	on_submit: function(frm) {
 		if(cur_frm.doc.mobile_number){
-			frappe.set_route('Form', 'PG%20Datas', 'New%20PG%20Datas%201')
+			frappe.set_route('Form', 'PG Datas', 'New PG Datas',{"occupant_id": frm.doc.name})
 		}
 	}
 	// refresh: function(frm){

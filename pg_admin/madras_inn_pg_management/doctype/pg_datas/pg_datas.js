@@ -12,7 +12,7 @@ frappe.ui.form.on('PG Datas', {
 	},
 	validate: function(frm) {
 		if(cur_frm.doc.cot){
-			frappe.set_route('Form', 'Fee', 'New%20Fee')
+			frappe.set_route('Form', 'Fee', 'New Fee',{"occupant_id": frm.doc.occupant_id,"fee_plan": frm.doc.fee_plan})
 		}
 		if(cur_frm.doc.date_of_joining > cur_frm.doc.date_of_relieving){
 			frappe.throw("Date of joining must be lesser that date of relieving");

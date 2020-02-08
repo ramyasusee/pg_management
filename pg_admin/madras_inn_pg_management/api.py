@@ -77,7 +77,7 @@ def get_fee_components(fee_structure):
 	:param fee_structure: Fee Structure.
 	"""
 	if fee_structure:
-		fs = frappe.get_list("Fee Component", fields=["fee_category", "amount"] , filters={"parent": fee_structure}, order_by= "idx")
+		fs = frappe.get_list("Fee Component", fields=["fee_category", "amount","fee_type"] , filters={"parent": fee_structure}, order_by= "idx")
 		return fs
 
 @frappe.whitelist()
