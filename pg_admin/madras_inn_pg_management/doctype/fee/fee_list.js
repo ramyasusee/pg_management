@@ -5,7 +5,7 @@ frappe.listview_settings['Fee'] = {
 		// 	return [__("Overdue"), "red", ["due_date,<,"+get_today()], ["due_date,<,"+get_today()]];
 		// }
 		if (doc.total_amount > doc.paid_amount) {
-			return [__("Pending"), "orange", ["total_amount,>,paid_amount"]];
+			return [__("Pending"), "red", ["total_amount,>,paid_amount"]];
 		}
 		else {
 			return [__("Paid"), "green", ["total_amount,<=,paid_amount"]];

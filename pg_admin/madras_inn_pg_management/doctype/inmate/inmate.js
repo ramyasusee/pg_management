@@ -6,6 +6,16 @@ frappe.ui.form.on('Inmate', {
 		if(cur_frm.doc.mobile_number){
 			frappe.set_route('Form', 'PG Datas', 'New PG Datas',{"occupant_id": frm.doc.name})
 		}
+	},
+	validate_otp: function(frm){
+		if(!frm.doc.enter_the_otp){
+			frappe.throw("Enter the OTP to save your details")
+		}
+        if(frm.doc.enter_the_otp != frm.doc.generated_otp){
+			frappe.throw("The OTP you entered is not right")
+		}else if(frm.doc.enter_the_otp == frm.doc.generated_otp && frm.doc.enter_the_otp && frm.doc.generated_otp){
+			frappe.throw("OTP is verified")
+		}
 	}
 	// refresh: function(frm){
 	// 	if ((frm.doc.enter_the_otp == frm.doc.generated_otp) && frm.doc.enter_the_otp != ""){

@@ -11,6 +11,7 @@
   "mobile_number",
   "send_otp",
   "enter_the_otp",
+  "validate_otp",
   "emergency_contact",
   "email_id",
   "permanent_address",
@@ -151,10 +152,16 @@
    "hidden": 1,
    "label": "Generated OTP",
    "read_only": 1
+  },
+  {
+   "fieldname": "validate_otp",
+   "fieldtype": "Button",
+   "label": "Validate OTP",
+   "options": "validate_otp"
   }
  ],
  "is_submittable": 1,
- "modified": "2020-02-08 12:24:17.945906",
+ "modified": "2020-02-10 14:35:11.106170",
  "modified_by": "Administrator",
  "module": "Madras-Inn PG Management",
  "name": "Inmate",
@@ -175,7 +182,9 @@
    "write": 1
   }
  ],
+ "search_fields": "occupant_name",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "occupant_name",
  "track_changes": 1
 }

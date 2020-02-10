@@ -11,9 +11,9 @@
 frappe.ui.form.on('Fee', {
 //
 	onload: function(frm){
-		if(frm.doc.__islocal){
-			frm.trigger("plan")
-		}
+		// if(frm.doc.__islocal){
+		// 	frm.trigger("plan")
+		// }
 	},
 	refresh: function(frm) {
 		cur_frm.fields_dict['components'].grid.wrapper.find('.grid-add-row').hide();
@@ -32,15 +32,17 @@ frappe.ui.form.on('Fee', {
 						var payment_record = today + "- Collected Amount: Rs." + data.amt;
 						}
 						frm.set_value("payment_record",payment_record)
+						frm.save_or_update();
 					}, __("Enter Paid Amount"), __("Collect"));
 			});
+			frm.save_or_update();
 		}
 	},
 	
 	plan: function(frm) {
-		// refresh_field("components");
-		// frm.set_value("components" ,"");
-		if (frm.doc.plan) {
+		frm.set_value("components" ,"");
+		refresh_field("components");
+		if (frm.doc.plan && frm.doc.components.length == 0) {
 			frappe.call({
 				method: "frappe.client.get",
 				args: {
@@ -59,7 +61,6 @@ frappe.ui.form.on('Fee', {
 								refresh_field("components");
 							}							
 						});
-						refresh_field("components");
 					}
 					frm.trigger("calculate_total_amount");
 				}
