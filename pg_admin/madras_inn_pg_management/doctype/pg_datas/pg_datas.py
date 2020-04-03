@@ -7,4 +7,14 @@ import frappe
 from frappe.model.document import Document
 
 class PGDatas(Document):
-	pass
+	def validate(self):
+		cot_doc = frappe.get_doc("Cot", self.cot)
+		if self.status == "Active":
+			cot_doc.update({
+				"cot_status": "Filled"
+			})
+		else:
+			cot_doc.update({
+				"cot_status": "Available"
+			})
+		cot_doc.save(ignore_permissions=True)

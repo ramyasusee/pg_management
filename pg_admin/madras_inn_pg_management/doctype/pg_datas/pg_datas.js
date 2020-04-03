@@ -1,5 +1,6 @@
 // Copyright (c) 2019, Aftertutor Ventures Pvt Ltd and contributors
 // For license information, please see license.txt
+
 cur_frm.add_fetch("name1", "mobile_number", "mobile_number")
 frappe.ui.form.on('PG Datas', {
 	status: function(frm){
@@ -11,7 +12,7 @@ frappe.ui.form.on('PG Datas', {
 		}
 	},
 	validate: function(frm) {
-		if(cur_frm.doc.cot){
+		if(frm.doc.fee_plan && frm.doc.__islocal){
 			frappe.set_route('Form', 'Fee', 'New Fee',{"occupant_id": frm.doc.occupant_id,"fee_plan": frm.doc.fee_plan})
 		}
 		if(cur_frm.doc.date_of_joining > cur_frm.doc.date_of_relieving){
@@ -33,5 +34,23 @@ frappe.ui.form.on('PG Datas', {
 	},
 	on_submit: function(frm) {
 		frappe.set_route('Form', 'Fee', 'New')
+	},
+	onload: function(frm){
+		frm.set_query("room", function() {
+			return {
+				filters: [
+					["house", "=", frm.doc.house]
+				]
+			}
+		});
+		frm.set_query("cot", function() {
+			return {
+				filters: [
+					["house", "=", frm.doc.house],
+					["room", "=", frm.doc.room],
+					["cot_status", "=", "Available"]
+				]
+			}
+		});
 	}
 });

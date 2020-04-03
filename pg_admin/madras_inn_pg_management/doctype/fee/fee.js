@@ -16,8 +16,8 @@ frappe.ui.form.on('Fee', {
 		// }
 	},
 	refresh: function(frm) {
-		cur_frm.fields_dict['components'].grid.wrapper.find('.grid-add-row').hide();
-        cur_frm.fields_dict['components'].grid.wrapper.find('.grid-remove-rows').hide();
+		// cur_frm.fields_dict['components'].grid.wrapper.find('.grid-add-row').hide();
+        // cur_frm.fields_dict['components'].grid.wrapper.find('.grid-remove-rows').hide();
 		if (frm.doc.outstanding_amount > 0 && frm.doc.docstatus == 1) {
 			frm.add_custom_button(__("Collect Fees"), function() {
 				frappe.prompt({fieldtype:"Float", label: __("Amount Paid"), fieldname:"amt"},
@@ -33,13 +33,22 @@ frappe.ui.form.on('Fee', {
 						}
 						frm.set_value("payment_record",payment_record)
 						frm.save_or_update();
+						frappe.call({
+							"method": "pg_admin.madras_inn_pg_management.doctype.fee.fee.send_sms",
+							args:{
+								mob_no: frm.doc.mobile_number,
+								due: frm.doc.outstanding_amount,
+								amt: data.amt
+							},
+							callback:function(r){}
+						})
 					}, __("Enter Paid Amount"), __("Collect"));
 			});
 			frm.save_or_update();
 		}
 	},
 	
-	plan: function(frm) {
+	occupant_id: function(frm) {
 		frm.set_value("components" ,"");
 		refresh_field("components");
 		if (frm.doc.plan && frm.doc.components.length == 0) {
@@ -52,6 +61,7 @@ frappe.ui.form.on('Fee', {
 				callback: function(r) {
 					if (r.message) {
 						var fee_component_child = r.message.components;
+						refresh_field("components");
 						$.each(fee_component_child, function(i, d) {
 							if(d.fee_type){
 								var row = frappe.model.add_child(frm.doc, "Fee Component", "components");
@@ -61,6 +71,7 @@ frappe.ui.form.on('Fee', {
 								refresh_field("components");
 							}							
 						});
+						refresh_field("components");
 					}
 					frm.trigger("calculate_total_amount");
 				}

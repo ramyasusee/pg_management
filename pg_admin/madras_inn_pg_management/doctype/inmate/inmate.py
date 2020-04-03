@@ -20,8 +20,8 @@ class Inmate(Document):
         self.generated_otp = generateOTP()
         sms_text = "Your OTP for Madras Inn Registration Form is "+self.generated_otp
         send_welcome_sms(self.mobile_number, sms_text)
-    def validate_otp(self):
-        frappe.errprint("hoi")
+    # def validate_otp(self):
+    #     frappe.errprint("hoi")
         # if(self.enter_the_otp == ""):
         #     frappe.throw("Enter the OTP to save your details")
         # if(self.enter_the_otp != self.generated_otp):
@@ -29,7 +29,12 @@ class Inmate(Document):
         # elif(self.enter_the_otp == self.generated_otp):
         #     frappe.throw("OTP is verified")
     def on_update(self):
-        msgprint(_('Your details have been submitted successfully.'))
+        if not self.enter_the_otp:
+            frappe.throw("Enter the OTP to save your details")
+        if not self.i_agree_to_the_given_terms_and_conditions:
+            frappe.throw("Please Agree the Terms & Conditions")
+        if self.generated_otp and self.i_agree_to_the_given_terms_and_conditions:
+            msgprint(_('Your details have been submitted successfully.'))
         
         
 

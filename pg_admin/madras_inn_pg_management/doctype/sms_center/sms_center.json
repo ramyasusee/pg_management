@@ -50,7 +50,8 @@
   {
    "fieldname": "receiver_list",
    "fieldtype": "Code",
-   "label": "Receiver List"
+   "label": "Receiver List",
+   "permlevel": 1
   },
   {
    "fieldname": "create_receiver_list",
@@ -103,7 +104,7 @@
  "icon": "fa fa-mobile-phone",
  "idx": 1,
  "issingle": 1,
- "modified": "2020-02-10 13:16:23.989350",
+ "modified": "2020-02-11 14:41:24.708410",
  "modified_by": "Administrator",
  "module": "Madras Inn PG Management",
  "name": "SMS Center",
@@ -160,6 +161,15 @@
    "read": 1,
    "role": "Service Manager",
    "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "PG Admin",
+   "share": 1,
+   "write": 1
   }
  ],
  "read_only": 1,

@@ -40,13 +40,17 @@ class SMSCenter(Document):
 		self.receiver_list = "\n".join(list(set(rec_list))) #To ensure only unique numbers come out.
 
 	def send_pending_message(self):
+		# receiver_list = []
 		if self.send_to == "Pending":
 			pending = frappe.get_all('Fee', filters={'outstanding_amount':('>', 0),'docstatus':1}, fields=['occupant_id','occupant_name', 'mobile_number', 'outstanding_amount'])
 			for d in pending:
 				message = "Hi {}! Your Pending bill is {}.".format(d['occupant_name'], d['outstanding_amount'])
+				# receiver_list.append(d['mobile_number'])
 				number = d['mobile_number']
 				reply = send_sms([number], message)
-			msgprint(_("Hi {}! Your Pending bill is {}.".format(d['occupant_name'], d['outstanding_amount'])))
+			receiver_list = self.get_receiver_nos()
+			delist = '<br>'.join(receiver_list)
+			msgprint(_("Pending bill sent to this list <br> {}.".format(delist)))
 		pass
 
 	def get_receiver_nos(self):
